@@ -6,105 +6,99 @@
 /*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:37:49 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/02/28 15:31:02 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/01 17:29:07 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_basamak_sayisi(int c)
-{
-	int		i;
-
-	i = 0;
-	while (c > 0)
-	{
-		i++;
-		c = c / 10;
-	}
-	return (i);
-}
-
-int	ft_uzunluk(unsigned long sayi)
-{
-	int	i;
-
-	i = 0;
-	while (sayi > 0)
-	{
-		sayi = (sayi / 16);
-		i++;
-	}
-	return (i);
-}
-
-char	numbers(int c)
-{
-	char	*d;
-
-	d = "0123456789abcdef";
-	return (d[c]);
-}
-
-char	buyuknumbers(int c)
-{
-	char	*s;
-
-	s = "0123456789ABCDEF";
-	return (s[c]);
-}
-
-char	*hexfunc(unsigned long uzunluk, int key)
+char	*hexfunc(unsigned long sayi, int key)
 {
 	char		*dizi;
-	int			i;
 	int			len;
 
-	len = ft_uzunluk(uzunluk) + 1;
-	dizi = (char *)malloc(sizeof(char) * len + 2);
-	i = len;
 	if (key == 2)
 	{
-	dizi[0] = '0';
-	dizi[1] = 'x';
-	key = 0;
+		len = ft_uzunluk(sayi) + 3;
+		dizi = (char *)malloc(len--);
+		dizi[len--] = '\0';
+		dizi[0] = '0';
+		dizi[1] = 'x';
+		key = 0;
 	}
-	while (uzunluk > 0 && len >= 2)
+	else
 	{
-		if (key == 1)
-			dizi[len--] = buyuknumbers(uzunluk % 16);
-		else
-			dizi[len--] = numbers(uzunluk % 16);
-		uzunluk = uzunluk / 16;
+		len = ft_uzunluk(sayi) + 1;
+		dizi = (char *)malloc(len--);
+		dizi[len--] = '\0';
 	}
-	dizi[i] = '\0';
+	while (sayi >= 16)
+	{
+		if (key == 0)
+			dizi[len] = numbers(sayi % 16);
+		else
+			dizi[len] = buyuknumbers(sayi % 16);
+		sayi = sayi / 16;
+		len--;
+	}
+	if (key == 0)
+		dizi[len] = numbers(sayi % 16);
+	else
+		dizi[len] = buyuknumbers(sayi % 16);
 	return (dizi);
 }
 
-int	printing(va_list liste, char tip)
+size_t	printing(va_list liste, char tip)
 {
+	char	*a;
+	size_t	b;
+	int		i;
+	
+	a = NULL;
+	i = 0;
+	b = 0;
 	if (tip == 'd' || tip == 'i')
-		ft_putstr_fd(ft_itoa(va_arg(liste, int)), 1);
+		a = ft_itoa(va_arg(liste, int));
 	else if (tip == 'c')
+	{
 		ft_putchar_fd(va_arg(liste, int), 1);
+		return (1);
+	}
 	else if (tip == 's')
-		ft_putstr_fd(va_arg(liste, char *), 1);
+	{
+		a = va_arg(liste, char *);
+		if (a == NULL)
+		{
+			ft_putstr_fd("(null)" , 1);
+			return (6);
+		}
+		i = 1;
+	}
 	else if (tip == 'p')
-		ft_putstr_fd(hexfunc(va_arg(liste, unsigned long long), 2), 1);
+		a = hexfunc(va_arg(liste, unsigned long long), 2);
 	else if (tip == 'x')
-		ft_putstr_fd(hexfunc(va_arg(liste, unsigned int), 0), 1);
+		a = hexfunc(va_arg(liste, unsigned int), 0);
 	else if (tip == 'X')
-		ft_putstr_fd(hexfunc(va_arg(liste, unsigned int), 0), 1);
-	/*else if (tip == 'u')
-	printf("%s",ft_uitoa(liste, unsigned int)); */
-	return (0);
+		a = hexfunc(va_arg(liste, unsigned int), 1);
+	else if (tip == 'u')
+		return (ft_uitoa(va_arg(liste, unsigned int)));
+	else if (tip == '%')
+	{
+		write(1, "%%", 1);
+		return (1);
+	}
+	ft_putstr_fd(a, 1);
+	b = ft_strlen(a);
+	if (i == 0)
+		free(a);
+	return (b);
 }
 
 int	ft_printf(const char *str, ...)
 {
-	va_list liste;
+	va_list	liste;
 	int		i;
-	int		arrivals;
+	size_t	arrivals;
 
 	i = 0;
 	arrivals = 0;
@@ -114,14 +108,19 @@ int	ft_printf(const char *str, ...)
 		if (str[i] == '%')
 		{
 			i++;
-			arrivals = printing(liste, str[i]);
+			arrivals += printing(liste, str[i]);
+		}
+		else
+		{
+			ft_putchar_fd(str[i], 1);
+			arrivals++;
 		}
 		i++;
 	}
 	va_end (liste);
-	return (0);
+	return (arrivals);
 }
-
+/*
 int	main()
 {
 	char *a;
@@ -129,6 +128,8 @@ int	main()
 
 	a = "yasin";
 	s = a;
-	printf("%d\n",ft_printf("%p", &s));
-	printf("%p", &s);
+	ft_printf("%u\n", 123);
+	//printf("%d\n",ft_printf("%u", 123));
+	printf("\n%u", 123);
 }
+*/

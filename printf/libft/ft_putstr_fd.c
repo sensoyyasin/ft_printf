@@ -26,13 +26,3 @@ void	ft_putstr_fd(char *s, int fd)
 		}
 	}
 }
-/*
-int	main()
-{
-int	i = open("my.txt",O_WRONLY);
-int	c = open("taha.txt",O_WRONLY);
-printf("%d\n",i);
-printf("%d\n",c);
-ft_putstr_fd("yasin",i);
-ft_putstr_fd("taha",c);
-}*/
