@@ -6,7 +6,7 @@
 /*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:37:49 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/03/01 17:29:07 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/04 12:14:59 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,9 @@ size_t	printing(va_list liste, char tip)
 		a = hexfunc(va_arg(liste, unsigned int), 1);
 	else if (tip == 'u')
 		return (ft_uitoa(va_arg(liste, unsigned int)));
-	else if (tip == '%')
+	else 
 	{
-		write(1, "%%", 1);
-		return (1);
+		return (write(1, &tip, 1));
 	}
 	ft_putstr_fd(a, 1);
 	b = ft_strlen(a);
@@ -120,16 +119,17 @@ int	ft_printf(const char *str, ...)
 	va_end (liste);
 	return (arrivals);
 }
-/*
+
 int	main()
 {
 	char *a;
 	char *s;
+	char *p;
 
-	a = "yasin";
+	a = "%zyasin";
 	s = a;
-	ft_printf("%u\n", 123);
+	ft_printf("%u", -5);
 	//printf("%d\n",ft_printf("%u", 123));
-	printf("\n%u", 123);
+	//printf("\n%u", 123);
 }
-*/
+

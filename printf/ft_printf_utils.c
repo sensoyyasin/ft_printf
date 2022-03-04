@@ -6,13 +6,13 @@
 /*   By: ysensoy <ysensoy@student.42kocaeli.com.tr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 16:59:58 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/03/01 17:23:42 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/04 11:58:57 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-size_t	ft_basamak_sayisi(int c)
+size_t	ft_basamak_sayisi(unsigned int c)
 {
 	int	i;
 
@@ -56,15 +56,6 @@ char	buyuknumbers(int c)
 	return (s[c]);
 }
 
-/*char	*ft_yuzdebul(char *s)
-{
-	int		i;
-
-	i = 0;
-	while (s[i] != '%')
-}
-*/
-
 size_t	ft_uitoa(unsigned int n)
 {
 	size_t		len;
@@ -75,13 +66,16 @@ size_t	ft_uitoa(unsigned int n)
 	i = len;
 	str = (char *)malloc(sizeof(char) * len + 1);
 	str[i] = '\0';
+	if (n == 0)
+	{
+		free(str);
+		return (write(1, "0", 1));
+	}
 	while (n > 0)
 	{
 		str[--len] = (n % 10) + 48;
 		n = n / 10;
 	}
-	len--;
-	str[len] = (n % 10) + 48;
 	ft_putstr_fd(str, 1);
 	free(str);
 	return (i);
