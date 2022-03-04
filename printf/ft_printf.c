@@ -6,7 +6,7 @@
 /*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:37:49 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/03/04 12:14:59 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/04 13:38:14 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	ft_printf(const char *str, ...)
 	va_end (liste);
 	return (arrivals);
 }
-
+/*
 int	main()
 {
 	char *a;
@@ -132,4 +132,4 @@ int	main()
 	//printf("%d\n",ft_printf("%u", 123));
 	//printf("\n%u", 123);
 }
-
+*/
