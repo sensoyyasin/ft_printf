@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysensoy <ysensoy@student.42kocaeli.com.tr  +#+  +:+       +#+        */
+/*   By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 16:59:58 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/03/04 11:58:57 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/08 11:56:22 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-size_t	ft_basamak_sayisi(unsigned int c)
+int	ft_basamak_sayisi(unsigned int c)
 {
 	int	i;
 
@@ -25,9 +25,21 @@ size_t	ft_basamak_sayisi(unsigned int c)
 	return (i);
 }
 
-size_t	ft_uzunluk(size_t sayi)
+int	ft_array(char *str)
 {
-	size_t	i;
+	int	len;
+
+	len = 0;
+	if (!str)
+		return (ft_array("(null)"));
+	while (str[len] != '\0')
+		len += ft_putchars(str[len]);
+	return (len);
+}
+
+int	ft_uzunluk(unsigned int sayi)
+{
+	int	i;
 
 	i = 0;
 	if (sayi == 0)
@@ -40,32 +52,20 @@ size_t	ft_uzunluk(size_t sayi)
 	return (i);
 }
 
-char	numbers(int c)
+int	ft_putchars(char c)
 {
-	char	*d;
-
-	d = "0123456789abcdef";
-	return (d[c]);
+	write(1, &c, 1);
+	return (1);
 }
 
-char	buyuknumbers(int c)
+int	ft_uitoa(unsigned int n)
 {
-	char	*s;
-
-	s = "0123456789ABCDEF";
-	return (s[c]);
-}
-
-size_t	ft_uitoa(unsigned int n)
-{
-	size_t		len;
+	int			len;
 	char		*str;
-	size_t		i;
 
 	len = ft_basamak_sayisi(n);
-	i = len;
 	str = (char *)malloc(sizeof(char) * len + 1);
-	str[i] = '\0';
+	str[len] = '\0';
 	if (n == 0)
 	{
 		free(str);
@@ -76,7 +76,7 @@ size_t	ft_uitoa(unsigned int n)
 		str[--len] = (n % 10) + 48;
 		n = n / 10;
 	}
-	ft_putstr_fd(str, 1);
+	len = ft_array(str);
 	free(str);
-	return (i);
+	return (len);
 }

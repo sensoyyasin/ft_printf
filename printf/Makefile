@@ -6,12 +6,11 @@
 #    By: ysensoy <ysensoy@student.42kocaeli.com.tr  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/01 14:12:36 by ysensoy           #+#    #+#              #
-#    Updated: 2022/03/01 14:31:57 by ysensoy          ###   ########.tr        #
+#    Updated: 2022/03/08 13:50:41 by ysensoy          ###   ########.tr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= libftprintf.a
-INCLUDE		= include
 LIBFT		= libft
 CC			= gcc
 CFLAGS		= -Wall -Werror -Wextra
@@ -28,9 +27,6 @@ $(NAME):	$(OBJ)
 			@cp libft/libft.a .
 			@mv libft.a $(NAME)
 			$(AR) $(NAME) $(OBJ)
-
-%.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 			@rm -f *.o

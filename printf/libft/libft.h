@@ -6,7 +6,7 @@
 /*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:26:12 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/03/01 14:32:41 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/08 10:53:50 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 typedef struct s_list
 {
 	void			*content;
-	struct	s_list	*next;
+	struct s_list	*next;
 }	t_list;
 
 int		ft_atoi(const	char *str);

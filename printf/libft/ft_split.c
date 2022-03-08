@@ -6,7 +6,7 @@
 /*   By: ysensoy <ysensoy@student.42kocaeli.com.tr  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 17:25:04 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/02/21 10:17:06 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/08 10:53:30 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,3 @@ char	**ft_split(const char *s, char c)
 	ft_place(str, s, c, wrdcnt);
 	return (str);
 }
-

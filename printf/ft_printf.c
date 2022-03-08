@@ -3,121 +3,125 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/27 17:37:49 by ysensoy           #+#    #+#             */
-/*   Updated: 2022/03/04 13:38:14 by ysensoy          ###   ########.tr       */
+/*   Updated: 2022/03/08 13:47:36 by ysensoy          ###   ########.tr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*hexfunc(unsigned long sayi, int key)
-{
-	char		*dizi;
-	int			len;
-
-	if (key == 2)
-	{
-		len = ft_uzunluk(sayi) + 3;
-		dizi = (char *)malloc(len--);
-		dizi[len--] = '\0';
-		dizi[0] = '0';
-		dizi[1] = 'x';
-		key = 0;
-	}
-	else
-	{
-		len = ft_uzunluk(sayi) + 1;
-		dizi = (char *)malloc(len--);
-		dizi[len--] = '\0';
-	}
-	while (sayi >= 16)
-	{
-		if (key == 0)
-			dizi[len] = numbers(sayi % 16);
-		else
-			dizi[len] = buyuknumbers(sayi % 16);
-		sayi = sayi / 16;
-		len--;
-	}
-	if (key == 0)
-		dizi[len] = numbers(sayi % 16);
-	else
-		dizi[len] = buyuknumbers(sayi % 16);
-	return (dizi);
-}
-
-size_t	printing(va_list liste, char tip)
+int	ptr_printer(unsigned long n)
 {
 	char	*a;
-	size_t	b;
-	int		i;
-	
-	a = NULL;
-	i = 0;
-	b = 0;
-	if (tip == 'd' || tip == 'i')
-		a = ft_itoa(va_arg(liste, int));
-	else if (tip == 'c')
+
+	a = ft_strdup("0123456789abcdef");
+	if (n >= 16)
 	{
-		ft_putchar_fd(va_arg(liste, int), 1);
-		return (1);
+		ptr_printer(n / 16);
+		ptr_printer(n % 16);
+	}
+	else
+		ft_putchars(a[n]);
+	free(a);
+	return (0);
+}
+
+int	ptr_print(unsigned long n)
+{
+	int	i;
+
+	i = 1;
+	ft_putchars('0');
+	ft_putchars('x');
+	ptr_printer(n);
+	while (n >= 16)
+	{
+		n = n / 16;
+		i++;
+	}
+	return (i + 2);
+}
+
+int	hexfunc(unsigned int sayi, char c)
+{
+	char			*str;
+	int				len;
+	char			*dizi;
+	int				i;
+
+	if (c == 'X')
+		dizi = "0123456789ABCDEF";
+	else
+		dizi = "0123456789abcdef";
+	len = ft_uzunluk(sayi);
+	i = len;
+	str = calloc(len, 1);
+	if (sayi == 0)
+		return (write(1, "0", 1));
+	while (sayi > 0)
+	{
+		str[--i] = dizi[sayi % 16];
+		sayi = sayi / 16;
+	}
+	ft_array(str);
+	free(str);
+	return (len);
+}
+
+int	printing(va_list liste, int tip)
+{
+	char	*a;
+	int		i;
+
+	i = 0;
+	if (tip == 'c')
+		i += ft_putchars(va_arg(liste, int));
+	else if (tip == 'd' || tip == 'i')
+	{
+		a = ft_itoa(va_arg(liste, int));
+		i += ft_array(a);
+		free(a);
 	}
 	else if (tip == 's')
-	{
-		a = va_arg(liste, char *);
-		if (a == NULL)
-		{
-			ft_putstr_fd("(null)" , 1);
-			return (6);
-		}
-		i = 1;
-	}
+		i += ft_array(va_arg(liste, char *));
 	else if (tip == 'p')
-		a = hexfunc(va_arg(liste, unsigned long long), 2);
-	else if (tip == 'x')
-		a = hexfunc(va_arg(liste, unsigned int), 0);
-	else if (tip == 'X')
-		a = hexfunc(va_arg(liste, unsigned int), 1);
+		i += ptr_print(va_arg(liste, unsigned long));
+	else if (tip == 'x' || tip == 'X')
+		i += hexfunc(va_arg(liste, unsigned int), tip);
 	else if (tip == 'u')
-		return (ft_uitoa(va_arg(liste, unsigned int)));
-	else 
-	{
-		return (write(1, &tip, 1));
-	}
-	ft_putstr_fd(a, 1);
-	b = ft_strlen(a);
-	if (i == 0)
-		free(a);
-	return (b);
+		i += ft_uitoa(va_arg(liste, unsigned int));
+	else if (tip == '%')
+		i += ft_putchars('%');
+	return (i);
 }
 
 int	ft_printf(const char *str, ...)
 {
 	va_list	liste;
 	int		i;
-	size_t	arrivals;
+	int		len;
 
+	va_start(liste, str);
 	i = 0;
-	arrivals = 0;
-	va_start (liste, str);
-	while (str[i] != '\0')
+	len = 0;
+	while (str[i])
 	{
 		if (str[i] == '%')
 		{
 			i++;
-			arrivals += printing(liste, str[i]);
+			len += printing(liste, str[i]);
 		}
 		else
 		{
 			ft_putchar_fd(str[i], 1);
-			arrivals++;
+			len++;
 		}
 		i++;
 	}
-	va_end (liste);
-	return (arrivals);
+	va_end(liste);
+	return (len);
 }
 /*
 int	main()
@@ -125,11 +129,16 @@ int	main()
 	char *a;
 	char *s;
 	char *p;
+	int	 x;
 
-	a = "%zyasin";
+	x = 0;
+
+	a = "yasin";
 	s = a;
-	ft_printf("%u", -5);
+	x = ft_printf("%p\n", 1440);
+	//printf("%p", s);
 	//printf("%d\n",ft_printf("%u", 123));
 	//printf("\n%u", 123);
+	//printf("%d", x);
 }
 */
